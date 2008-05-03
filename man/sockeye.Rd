@@ -9,9 +9,9 @@
 }
 \usage{data(sockeye)}
 \format{A data frame with two columns:
-\item{year}{ The year minus 1900. E.g. \code{80} is 1980 and
+\item{\code{year}}{ The year minus 1900. E.g. \code{80} is 1980 and
 \code{100} is the year 2000. }
-\item{logReturns}{ The figure for the returning number of
+\item{\code{logReturns}}{ The figure for the returning number of
 salmon, converted to the natural logarithmic scale. }
 }
 \source{Fisheries and Oceans Canada, Pacific Region.}

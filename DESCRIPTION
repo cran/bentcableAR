@@ -1,8 +1,8 @@
 Package: bentcableAR
 Type: Package
 Title: Bent-Cable Regression for Independent Data or Autoregressive Time Series
-Version: 0.1
-Date: 2008-04-28
+Version: 0.1.1
+Date: 2008-05-03
 Author:
 	Grace Chiu <bentcable@hush.com>,
 	Assistant Professor,
@@ -21,4 +21,4 @@ Description:
 	(linear-quadratic-linear) generalizes the broken stick 
 	(linear-linear), which is also handled by this package.
 License: GPL (>= 3)
-Packaged: Tue Apr 29 02:16:09 2008; gchiu
+Packaged: Sat May  3 18:22:21 2008; gchiu

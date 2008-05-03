@@ -12,8 +12,8 @@
 \tabular{ll}{
 Package: \tab bentcableAR\cr
 Type: \tab Package\cr
-Version: \tab 0.1\cr
-Date: \tab 2008-04-28\cr
+Version: \tab 0.1.1\cr
+Date: \tab 2008-05-03\cr
 License: \tab GPL (>=3)\cr
 }
 There are two main interfaces in this package:

@@ -1,6 +1,6 @@
 \name{cable.change.conf}
 \alias{cable.change.conf}
-\title{ Confidence Interval for CTP of AR(p>0) Bent Cable }
+\title{ Confidence Interval for CTP of AR(p) Bent Cable }
 \description{
 	The \emph{critical time point} (CTP) is estimated and
 	accompanied by a Wald confidence interval.
@@ -9,7 +9,8 @@
 cable.change.conf(ar.p.fit, level)
 }
 \arguments{
-  \item{ar.p.fit}{ A \code{cable.ar.p.iter} object for AR(p) data, p>0. }
+  \item{ar.p.fit}{ A \code{cable.ar.p.iter} object for AR(p\eqn{\ge}0)
+	  data. }
   \item{level}{ A numeric value between 0 and 1, exclusive. }
 }
 \details{
@@ -43,22 +44,22 @@ cable.change.conf(ar.p.fit, level)
 }
 \section{Warnings}{
 	Computations for the CTP estimate and confidence interval are based on a time
-	vector of the form \code{c(0,1,2,\ldots)}. Any other form for the time
-	vector may lead to singular computations and/or returned values that are
-	meaningless. To ensure compatibility between the model fit and CTP
+	vector of the form \code{c(0,1,2,\ldots)}. For any other form for the time
+	vector, the CTP will not be computed, and on-screen warnings
+	will appear. To ensure compatibility between the model fit and CTP
 	estimates, the user is advised to fit the model using the default
 	time vector. Then, if necessary, the user may transform the results
 	to the preferred time scale after the model and CTP estimates have
 	been produced.
 
-	In addition, this function does not handle \code{ar.p.fit} from a
-	non-AR(p>0) fit.
-	\bold{Rationale}:
-	In a non-time-series context (often with non-equidistant
-	design points), the cable's slope often never changes sign, and
-	even if it does, the point at which this takes place may be less 
-	interpretable. In such a context, the user is advised to rely on
-	confidence regions for \eqn{(\tau,\gamma)} (see references).
+	The above computational issue implies that the function cannot
+	handle non-time-series data. \bold{Rationale}:
+	In a non-time-series context design points are often
+	non-equidistant, and the cable's slope often never changes sign;
+	even with a sign change, the point at which this takes place may be
+	less interpretable. In such a context, the user is advised to rely
+	on confidence regions for \eqn{(\tau,\gamma)} (see
+	\bold{References}).
 }
 \seealso{ \code{\link{solve}}, \code{\link{cable.ar.p.plot}} }
 \examples{
@@ -73,6 +74,15 @@ cable.change.conf( fit.ar2, .9 )
 	# fit.ar2 <- bentcable.ar( sockeye$logReturns, 
 	#	init.cable=c(13,.1,-.5,11,4), p=2, ci.level=.9 )
 	# cable.change.conf( fit.ar2$cable, .9 )
+
+# AR(2) stick fit
+stick.ar2 <- cable.ar.p.iter( c(13,.1,-.5,11,.5,-.5),
+	sockeye$logReturns, tol=1e-4, stick=TRUE)
+cable.change.conf( stick.ar2, .9)
+	# compare to this:
+	# stick.ar2 <- bentcable.ar( sockeye$logReturns,
+	#	init.cable=c(13,.1,-.5,11), p=2, stick=TRUE, ci.level=.9 )
+	#	cable.change.conf( stick.ar2$cable, .9 )
 
 # AR(4) stick fit
 fit.ar4 <- cable.ar.p.iter( c(13,.1,-.5,11,.5,-.5,.5,-.5),

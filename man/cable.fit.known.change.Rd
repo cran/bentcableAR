@@ -11,9 +11,11 @@
 	the main engine of \code{bentcable.dev.plot}.
 }
 \usage{
-cable.ar.0.fit(y.vect, t.vect = NULL, tau.vect, gamma.vect, dev.mat, stick = FALSE)
+cable.ar.0.fit(y.vect, t.vect = NULL, tau.vect, gamma.vect, dev.mat,
+	stick = FALSE)
 cable.dev(tau.vect, gamma.vect, y.vect, t.vect = NULL, p = 0)
-cable.fit.known.change(y.vect, t.vect = NULL, n = NA, tau.vect, gamma.vect, dev.mat, p = 0)
+cable.fit.known.change(y.vect, t.vect = NULL, n = NA,
+	tau.vect, gamma.vect, dev.mat, p = 0)
 }
 \arguments{
   \item{y.vect}{ A numeric vector of response values. }

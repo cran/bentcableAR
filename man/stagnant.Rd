@@ -9,8 +9,8 @@
 }
 \usage{data(stagnant)}
 \format{A data frame with two columns:
-\item{logflow}{ The flow rate in g/cm-s, log-transformed }
-\item{loght}{ The band height in cm, log-transformed. }
+\item{\code{logflow}}{ The flow rate in g/cm-s, log-transformed }
+\item{\code{loght}}{ The band height in cm, log-transformed. }
 }
 \source{ Seber, G. A. F. and Wild, C. J. (2003), \emph{Nonlinear
 Regression}, Hoboken: Wiley. }

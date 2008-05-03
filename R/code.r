@@ -1,4 +1,4 @@
-#updated apr28,2008
+#updated may3,2008
 
 #-----------------------------------------
 # regular cable fit deviance surface code
@@ -30,8 +30,8 @@ cable.loop<-function(i, j, tau.vect, gamm.vect, y.vect, design, max.flag = TRUE)
         fit <- try(lm(formula = y.vect ~ t + cable.t, data = design))
 
 	if(length(fit) == 12)  
-                return( - dim(design)[1] * log(summary(fit)$sigma^2))
-        else
+		return( - dim(design)[1] * log(summary(fit)$sigma^2))
+	else
 		return(NA)
 }
 
@@ -216,7 +216,7 @@ cable.dev<-function(tau.vect,gamma.vect,y.vect,t.vect=NULL,p=0){
 	###############
 	# stand-alone #
 	####################################################################
-	# 'tau.vect' and 'gamma.vect' specify a tau-gamma grid;	          #
+	# 'tau.vect' and 'gamma.vect' specify a tau-gamma grid;            #
 	# 'p' is the AR order for bent-cable residuals.                    #
 	# This function computes the bent-cable profile deviance surface   #
 	# matrix over the specified tau-gamma grid. It is intended to be   #
@@ -573,6 +573,19 @@ bentcable.ar<-function(y.vect,tgdev=NULL,p=0,stick=FALSE,t.vect=NULL,
 	if(is.null(t.vect))
 		t.vect<-c(0:(n-1))
 
+	wrong.t<-FALSE
+
+	if(sum(t.vect!=c(0:(n-1)))>0){
+
+		message("*******************************")
+		message("WARNING:")
+		message("Cannot estimate CTP correctly")
+		message("unless 't.vect' is c(0,1,2,...)")
+		message("*******************************")
+
+		wrong.t<-TRUE
+
+	}
 
 	if(!stick){ # fit bent cable:
 
@@ -664,11 +677,12 @@ bentcable.ar<-function(y.vect,tgdev=NULL,p=0,stick=FALSE,t.vect=NULL,
 				title(paste("AR(0) bent cable:\n",main))
 				cable.lines(t.vect,coef(fit$fit)[1:5],col="red")
 
-				return(list(cable=fit))
-
 			}
 
-			ctp.ci<-try(cable.change.conf(fit,ci.level))
+			if(!wrong.t)
+				ctp.ci<-try(cable.change.conf(fit,ci.level))
+			else
+				ctp.ci<-NULL
 
 			if(length(ctp.ci)!=3){
 
@@ -676,19 +690,22 @@ bentcable.ar<-function(y.vect,tgdev=NULL,p=0,stick=FALSE,t.vect=NULL,
 				message("Failed to compute CTP confidence interval!")
 				message("******************************************")
 
-				cable.ar.p.diag(fit,main=main)
+				if(p>0)
+					cable.ar.p.diag(fit,main=main)
 
 				return(list(cable=fit))
 			}	
 
 			else{
 
-				cable.ar.p.diag(fit,main=main,ctp.ci=ctp.ci)
+				if(p>0)
+					cable.ar.p.diag(fit,main=main,ctp.ci=ctp.ci)
+				else
+					abline(v=c(ctp.ci$change,ctp.ci$int),lty=2,col="blue")
 
 				return(list(cable=fit,ctp=ctp.ci))
 			}
 		}
-
 	}
 
 	# fit broken stick:
@@ -782,18 +799,19 @@ bentcable.ar<-function(y.vect,tgdev=NULL,p=0,stick=FALSE,t.vect=NULL,
 		cable.lines(t.vect,c(coef(fit$fit)[1:4],0),col="red")
 		title(paste("AR(0) broken stick:\n",main))
 
-
-		return(list(cable=fit))
 	}
 
-	# fit AR broken stick:
+	else{	# fit AR broken stick:
 
+		init.vect<-c(init.cable,init.phi)
 
-	init.vect<-c(init.cable,init.phi)
+		fit<-cable.ar.p.iter(init.vect,y.vect,t.vect,n,tol,method0,method1,stick=TRUE)
+	}
 
-	fit<-cable.ar.p.iter(init.vect,y.vect,t.vect,n,tol,method0,method1,stick=TRUE)
-
-	ctp.ci<-try(cable.change.conf(fit,ci.level))
+	if(!wrong.t)
+		ctp.ci<-try(cable.change.conf(fit,ci.level))
+	else
+		ctp.ci<-NULL
 
 	if(length(ctp.ci)!=3){
 
@@ -801,14 +819,18 @@ bentcable.ar<-function(y.vect,tgdev=NULL,p=0,stick=FALSE,t.vect=NULL,
 		message("Failed to compute CTP confidence interval!")
 		message("******************************************")
 
-		cable.ar.p.diag(fit,main=main)
+		if(p>0)
+			cable.ar.p.diag(fit,main=main)
 
 		return(list(cable=fit))
 	}	
 
 	else{
 
-		cable.ar.p.diag(fit,main=main,ctp.ci=ctp.ci)
+		if(p>0)
+			cable.ar.p.diag(fit,main=main,ctp.ci=ctp.ci)
+		else
+			abline(v=c(ctp.ci$change,ctp.ci$int),lty=2,col="blue")
 
 		return(list(cable=fit,ctp=ctp.ci))
 	}
@@ -1384,8 +1406,8 @@ find.fisher<-function(n,theta.vect,phi.vect,sigma.sq){
 
 	fisher.dim<-length(theta.vect)
 
-	fisher<-diag(fisher.dim)-diag(fisher.dim) # initialize
-	working.fisher<-diag(fisher.dim)-diag(fisher.dim)
+	fisher<-matrix(0,ncol=fisher.dim,nrow=fisher.dim) # initialize
+	working.fisher<-fisher
 
 	for(summand in 0:(n-1)){
 		for(j in 1:fisher.dim){
@@ -1412,8 +1434,7 @@ cable.change.conf<-function(ar.p.fit,level){
 	# stand-alone #
 	#####################################################
 	# This function computes an approximate confidence  #
-	# interval for the CTP of an AR(p) bent cable,      #
-	# where p>0.                                        #
+	# interval for the CTP of an AR(p) bent cable.      #
 	#                                                   #
 	# 'ar.p.fit' is a 'cable.ar.p.iter()' object, or    #
 	# the '$cable' element of a 'bentcable.ar()'        #
@@ -1430,21 +1451,42 @@ cable.change.conf<-function(ar.p.fit,level){
 
 	if(!stick)
 		k<-5
-	else
+	else{
 		k<-4
+		gamm<-0
+	}
 
 	n<-ar.p.fit$n
 	p<-ar.p.fit$p
 
-	theta.vect<-ar.p.fit$est[1:k]
-	phi.vect<-ar.p.fit$est[-c(1:k)]
+	if(p>0){
+	
+		theta.vect<-ar.p.fit$est[1:k]
+		phi.vect<-ar.p.fit$est[-c(1:k)]
 
-	if(ar.p.fit$method=="css")
-		sigma.sq<-ar.p.fit$ar.p.fit$val/(n-p)
-	else
-		sigma.sq<-ar.p.fit$ar.p.fit$var
+		if(k==5)
+			gamm<-theta.vect[5]
 
-	fisher.mat<-find.fisher(n,theta.vect,phi.vect,sigma.sq)[2:k,2:k]
+		if(ar.p.fit$method=="css")
+			sigma.sq<-ar.p.fit$ar.p.fit$val/(n-p)
+		else{
+#			sigma.sq<-ar.p.fit$ar.p.fit$var
+			sigma.sq<-sse.ar.p.core(theta.vect[1],theta.vect[2],theta.vect[3],
+				theta.vect[4],gamm,phi.vect,ar.p.fit$y,ar.p.fit$t,n,p)/(n-p)
+		}
+	}
+
+	else{
+
+		theta.vect<-coef(ar.p.fit$fit)[1:k]
+		phi.vect<-NULL
+
+		fit.summ<-summary(ar.p.fit$fit)
+		sigma.sq<-fit.summ$sig^2*fit.summ$df[2]/n
+
+	}
+
+	fisher.mat<-find.fisher(n,theta.vect,phi.vect,sigma.sq)
 
 	tau<-theta.vect[4]
 	
@@ -1458,12 +1500,12 @@ cable.change.conf<-function(ar.p.fit,level){
 
 		alpha.vect<-c(-2*gamm/b2,2*b1*gamm/b2^2,1,-(2*b1+b2)/b2)
 
-		v<-alpha.vect%*%solve(fisher.mat)%*%alpha.vect
+		v<-alpha.vect%*%solve(fisher.mat[2:k,2:k])%*%alpha.vect
 	}
 
 	else{
 
-		v<-fisher.mat[3,3]
+		v<-fisher.mat[4,4]
 
 		if(is.na(v)|v==0)
 			return()

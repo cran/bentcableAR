@@ -11,8 +11,12 @@
 	included in some cases.
 }
 \usage{
-bentcable.ar(y.vect, tgdev = NULL, p = 0, stick = FALSE, t.vect = NULL, init.cable = NULL, init.phi = NULL, tol = 1e-04, method0 = "css", method1 = "yw", ci.level = 0.95, main = NULL)
-bentcable.dev.plot(tau.vect, gamma.vect = NULL, y.vect, t.vect = NULL, stick = FALSE, p = 0)
+bentcable.ar(y.vect, tgdev = NULL, p = 0, stick = FALSE, t.vect = NULL,
+	init.cable = NULL, init.phi = NULL, tol = 1e-04,
+	method0 = "css", method1 = "yw", ci.level = 0.95,
+	main = NULL)
+bentcable.dev.plot(tau.vect, gamma.vect = NULL, y.vect, t.vect = NULL,
+	stick = FALSE, p = 0)
 }
 \arguments{
 	\item{y.vect}{ A numeric vector of response data. }
@@ -82,14 +86,16 @@ bentcable.dev.plot(tau.vect, gamma.vect = NULL, y.vect, t.vect = NULL, stick = F
 	performs overall bent-cable regression. This best fit is returned
 	but not plotted, and the autocorrelation is diagnosed (even for
 	non-time-series data) by a PACF plot and a suggested value of p
-	based on the AIC (see \code{ar}). As stated in the screen output,
-	these diagnostics should be used only for time-series data, where
-	the returned best AR(0) estimates are intended to be supplied as
-	\code{init.cable} in a subsequent call of \code{bentcable.ar} for
-	an AR(p>0) fit. For non-time-series data, the returned best fit can
-	be plotted by supplying the estimates as \code{init.cable} in
-	another call of \code{bentcable.ar} with \code{p=0}.
-
+	based on the AIC (see \code{ar}). As stated in the screen
+	output, these diagnostics should be used only for time-series data,
+	where the returned best AR(0) estimates are intended to be supplied
+	as \code{init.cable} in a subsequent call of \code{bentcable.ar}
+	for an AR(p>0) fit. To produce a plot of the returned
+	best AR(0) fit and/or the corresponding CTP confidence interval,
+	the user can supply the returned parameter estimates as
+	\code{init.cable} in another call of \code{bentcable.ar} with
+	\code{p=0} (see Scenario (3)).
+	
 	\bold{(2) AR(p>0) data and \code{tgdev} is supplied.} In this case, no
 	graphics are produced; \code{bentcable.ar} simply locates the
 	highest point on the grid-based profile deviance surface and
@@ -103,20 +109,15 @@ bentcable.dev.plot(tau.vect, gamma.vect = NULL, y.vect, t.vect = NULL, stick = F
 	\code{init.cable} are supplied.} In this case, \code{bentcable.ar}
 	performs overall bent-cable regression and produces a
 	scatterplot of the data superimposed with the best fit and
-	estimated transition. No other plots are produced, and the CTP is
-	not computed. The latter is because in a non-time-series context
-	(often with non-equidistant design points), the cable's slope often
-	never changes sign, and the CTP is undefined (see
-	\code{cable.change.conf}). Even with a sign change, the point at
-	which this takes place may be less interpretable for
-	non-time-series data. In such a context, the user is advised to
-	rely on confidence regions for \eqn{(\tau,\gamma)} (see
-	\bold{References}). Since \code{init.cable} is supposed to have
-	come from a reasonable source (such as grid-based), this fit is not
-	intended to be fed to another round of \code{bentcable.ar}, except 
-	when the user wishes to explore using a positive p (but this should
-	be performed in conjunction with another round of grid-based
-	approach in Scenario (2)).
+	estimated transition. For time series data where the CTP is
+	applicable (see \bold{Warnings}), the CTP confidence interval is
+	additionally computed and superimposed in blue. No other plots are
+	produced. Since \code{init.cable} is supposed to have come from a
+	reasonable source (such as grid-based), this fit is not intended to
+	be fed to another round of \code{bentcable.ar}, except when the
+	user wishes to explore using a positive p (but this should be
+	performed in conjunction with another round of grid-based approach
+	in Scenario (2)).
 
 	\bold{(4) AR(p>0) data and \code{init.cable} are supplied.} In this
 	case, \code{bentcacble.ar} computes the overall bent-cable fit and
@@ -132,7 +133,8 @@ bentcable.dev.plot(tau.vect, gamma.vect = NULL, y.vect, t.vect = NULL, stick = F
 	to another round of \code{bentcable.ar}, except when the user
 	wishes to explore using an alternative p (but this should be
 	performed in conjunction with another round of grid-based approach
-	in Scenario (1) or (2)).
+	in Scenario (1) or (2)), or when the \code{"css"} algorithm fails
+	to converge but the SSE value is desired (see \bold{Details}).
 
 	Below is a summary of the bent-cable regression methodology, and
 	how one may apply it by using the \code{bentcableAR} package. 
@@ -247,7 +249,7 @@ bentcable.dev.plot(tau.vect, gamma.vect = NULL, y.vect, t.vect = NULL, stick = F
 		\code{cable.ar.p.iter} and \code{\link{stick.ar.0}}. }
 	\item{ctp}{ A \code{\link{cable.change.conf}} object, if the CTP is
 		successfully estimated; returned by \code{bentcable.ar} in
-		Scenario (4). This object has three components: the CTP
+		Scenarios (3) and (4). This object has three components: the CTP
 		estimate, its estimated asymptotic variance, and the
 		corresponding Wald confidence interval. }
 	\item{fit}{ Returned by \code{bentcable.ar} in Scenarios (1) and (2).
@@ -315,13 +317,22 @@ Chiu, G., Lockhart, R. and Routledge, R. (2006), Bent-Cable Regression
 	independent data, \code{t.vect} can be non-equidistant.)   
 
 	Computations for the CTP estimate and confidence interval are based on a time
-	vector of the form \code{c(0,1,2,\ldots)}. Any other form for the time
-	vector may lead to singular computations and/or returned values that are
-	meaningless. To ensure compatibility between the model fit and CTP
+	vector of the form \code{c(0,1,2,\ldots)}. For any other form for the time
+	vector, the CTP will not be computed, and on-screen warnings
+	will appear. To ensure compatibility between the model fit and CTP
 	estimates, the user is advised to fit the model using the default
 	time vector. Then, if necessary, the user may transform the results
 	to the preferred time scale after the model and CTP estimates have
 	been produced.
+
+	The above computational issue implies that the CTP cannot
+	be computed for non-time-series data. \bold{Rationale}:
+	In a non-time-series context design points are often
+	non-equidistant, and the cable's slope often never changes sign;
+	even with a sign change, the point at which this takes place may be
+	less interpretable. In such a context, the user is advised to rely
+	on confidence regions for \eqn{(\tau,\gamma)} (see
+	\bold{References}).
 }
 \seealso{ 	\code{\link{cable.lines}}, \code{\link{lm}}, \code{\link{nls}}, \code{\link{optim}},
 	\code{\link{ar}}, \code{\link{arima}}, \code{\link{plot}},
@@ -347,7 +358,8 @@ bentcable.dev.plot( seq(-1,1,length=20),
 		# local regularity - expect to be true best fit
 		# SSE=0.005
 		# feed 'cable' in Scenario (3) to get fitted plot:
-		#	bentcable.ar( cable$y, init.cable=coef(cable$fit), t.vect=cable$t )
+		#	bentcable.ar( cable$y, init.cable=coef(cable$fit),
+		#		t.vect=cable$t )
 
 
 # AR(0) stick, start time at 80:
@@ -449,7 +461,11 @@ bentcable.ar( sockeye$logReturns, init.cable=c(10,.1,-.5,90),
 		# local regularity, no trouble
 
 
-
+# AR(0) stick, start time at 0:
+bentcable.ar( sockeye$logReturns, init.cable=coef(cable0$fit)[1:5],
+	stick=TRUE )
+		# identical to 'cable0' in Scenario (1)
+		# here you get plot of fit and CTP confidence interval
 
 # Scenario (4)
 ##############
@@ -475,8 +491,9 @@ stick2 <- bentcable.ar( sockeye$logReturns, init.cable=gr.stick2$init[1:4],
 
 			# compare this to the other peak shown in 'dev3'
 			#	bentcable.ar( sockeye$logReturns,
-			#	init.cable=c(10,0,-.5,91.5), p=2, stick=TRUE, t.vect=sockeye$year )
-				# "css" successful, SSE=5.1, not best fit!
+			#	init.cable=c(10,0,-.5,91.5), p=2, stick=TRUE,
+			#		t.vect=sockeye$year )
+						# "css" successful, SSE=5.1, not best fit!
 
 
 

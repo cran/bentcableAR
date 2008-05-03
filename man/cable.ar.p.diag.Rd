@@ -6,7 +6,8 @@
 	bent-cable fit when p>0.
 }
 \usage{
-cable.ar.p.diag(ar.p.fit, resid.type = "p", xlab = "time", ylab = "", main = NULL, main.all = NULL, ctp.ci = NULL)
+cable.ar.p.diag(ar.p.fit, resid.type = "p", xlab = "time", ylab = "",
+	main = NULL, main.all = NULL, ctp.ci = NULL)
 }
 \arguments{
 	\item{ar.p.fit}{ A \code{cable.ar.p.iter} object for AR(p) data, p>0. }

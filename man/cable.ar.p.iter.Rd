@@ -9,7 +9,8 @@
 	\code{stick.ar.0}).
 }
 \usage{
-cable.ar.p.iter(init, y.vect, t.vect = NULL, n = NA, tol, method0 = "css", method1 = "yw", stick = FALSE)
+cable.ar.p.iter(init, y.vect, t.vect = NULL, n = NA, tol,
+	method0 = "css", method1 = "yw", stick = FALSE)
 }
 \arguments{
   \item{init}{ A numeric vector of initial values, in the form of
