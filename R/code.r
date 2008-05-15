@@ -1,4 +1,4 @@
-#updated may3,2008
+#updated may15,2008
 
 #-----------------------------------------
 # regular cable fit deviance surface code
@@ -897,12 +897,10 @@ cable.fit.known.change<-function(y.vect,t.vect=NULL,n=NA,tau.vect,gamma.vect,dev
 	######################################################
 
 
-	junk1<-c(1:length(tau.vect))%*%(dev.mat==0)
-	t0<-tau.vect[junk1[junk1>0]][1]	# take smallest value in case of ridge
+	peak<-pick.peak(dev.mat==0,nrow(dev.mat),ncol(dev.mat))
 
-	junk1<-t((dev.mat==0)%*%c(1:length(gamma.vect)))
-
-	g0<-gamma.vect[junk1[junk1>0]][1] # take smallest value in case of ridge
+	t0<-tau.vect[peak$row]
+	g0<-gamma.vect[peak$col]
 
 	if(is.na(n))
 		n<-length(y.vect)
@@ -938,6 +936,18 @@ cable.fit.known.change<-function(y.vect,t.vect=NULL,n=NA,tau.vect,gamma.vect,dev
 	}
 
 }
+
+pick.peak<-function(dev.mat,nrow,ncol){
+
+	pick.row<-dev.mat%*%rep(1,ncol)
+	pick.row<-c(1:nrow)[pick.row>0][1]	# take smallest value in case of ridge
+
+	pick.col<-rep(1,nrow)%*%dev.mat
+	pick.col<-c(1:ncol)[pick.col>0][1]	# take smallest value in case of ridge
+
+	return(list(row=pick.row,col=pick.col))
+}
+
 
 cable.ar.p.iter<-function(init,y.vect,t.vect=NULL,n=NA,
 	tol,method0="css",method1="yw",stick=FALSE){

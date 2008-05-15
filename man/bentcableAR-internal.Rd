@@ -14,6 +14,7 @@
 \alias{loglik.given.g.ar.p}
 \alias{loglik.surf}
 \alias{loglik.surf.ar.p}
+\alias{pick.peak}
 \alias{sse.ar.p}
 \alias{sse.ar.p.core}
 \alias{sse.ar.p.given.beta.phi}
