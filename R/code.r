@@ -1,4 +1,4 @@
-#updated may15,2008
+#updated jun17,2009
 
 #-----------------------------------------
 # regular cable fit deviance surface code
@@ -1508,19 +1508,18 @@ cable.change.conf<-function(ar.p.fit,level){
 
 		change.hat<-tau-gamm-2*b1*gamm/b2
 
-		alpha.vect<-c(-2*gamm/b2,2*b1*gamm/b2^2,1,-(2*b1+b2)/b2)
+		alpha.vect<-c(0,-2*gamm/b2,2*b1*gamm/b2^2,1,-(2*b1+b2)/b2)
 
-		v<-alpha.vect%*%solve(fisher.mat[2:k,2:k])%*%alpha.vect
+		v<-alpha.vect%*%solve(fisher.mat)%*%alpha.vect
 	}
 
 	else{
 
-		v<-fisher.mat[4,4]
+		v<-solve(fisher.mat)[4,4]
 
 		if(is.na(v)|v==0)
 			return()
 
-		v<-1/v
 		change.hat=tau
 
 	}	
