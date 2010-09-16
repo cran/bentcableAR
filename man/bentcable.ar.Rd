@@ -277,23 +277,15 @@ bentcable.dev.plot(tau.vect, gamma.vect = NULL, y.vect, t.vect = NULL,
 		\code{tau} and \code{gamma}. }
 }
 \references{  
-Chiu, G. and Lockhart, R. (2006), "Bent-Cable Regression with AR(p)
-	Noise: Preliminary Theory and Applications," in \emph{2006
-	Proceedings of the American Statistical Association, Statistical
-	Computing Section [CD-ROM]}, pp. 2027--2034. Alexandria, VA:
-	American Statistical Association.
-	\url{http://www.stats.uwaterloo.ca/~gchiu/Articles/jsmproceedings06.pdf}
-
-Chiu, G. and Lockhart, R. (in progress), "Some Mathematical and
-	Algorithmic Details for Bent-Cable Regression with AR(p) Noise,"
-	Working Paper Series No. 2006-07, Department of Statistics and
-	Actuarial Science, University of Waterloo.
-	\url{http://www.stats.uwaterloo.ca/stats_navigation/techreports/06WorkingPapers/2006-07.pdf}
+Chiu, G.S. and Lockhart, R.A. (2010), Bent-Cable Regression with
+	Autoregressive Noise, \emph{Canadian Journal of Statistics},
+	\bold{38}, 386--407.
+	\url{http://faculty.washington.edu/gchiu/Articles/bentcable-cjs.pdf}
 
 Chiu, G., Lockhart, R. and Routledge, R. (2006), Bent-Cable Regression
 	Theory and Applications, \emph{Journal of the American Statistical
 	Association}, \bold{101}, 542--553.
-	\url{http://www.stats.uwaterloo.ca/~gchiu/Articles/bentcable-jasa.pdf}
+	\url{http://faculty.washington.edu/gchiu/Articles/bentcable-jasa.pdf}
 }
 \author{ Grace Chiu }
 \note{
