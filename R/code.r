@@ -1,4 +1,4 @@
-#updated jun17,2009
+#updated apr8, 2015
 
 #-----------------------------------------
 # regular cable fit deviance surface code
@@ -29,8 +29,9 @@ cable.loop<-function(i, j, tau.vect, gamm.vect, y.vect, design, max.flag = TRUE)
         design[,3] <- basic.cable(design[,2] - t.hat, g.hat)
         fit <- try(lm(formula = y.vect ~ t + cable.t, data = design))
 
-	if(length(fit) == 12)  
-		return( - dim(design)[1] * log(summary(fit)$sigma^2))
+	#if(length(fit) == 12)  
+   if(!inherits(fit,"try-error"))
+       return( - dim(design)[1] * log(summary(fit)$sigma^2))
 	else
 		return(NA)
 }
@@ -62,13 +63,17 @@ is.stationary<-function(phi.vect){
 	# correspond to a stationary AR time series.           #
 	########################################################
 
-	len<-length(try(arima.sim(n=2,list(ar=phi.vect)),silent=TRUE))
+	#len<-length(try(arima.sim(n=2,list(ar=phi.vect)),silent=TRUE))
 
-	if(len==2)
-		return(TRUE)
+	#if(len==2)
+   #   return(TRUE)
+	#else
+	#	return(FALSE)
 
-	else
-		return(FALSE)
+    trial<-try(arima.sim(n=2,list(ar=phi.vect)),silent=TRUE)
+
+    return(!inherits(trial,"try-error"))
+
 }
 
 ar.p.resid.core<-function(b0,b1,b2,tau,gamm,phi.vect,y.vect,t.vect,n,pp){
@@ -608,7 +613,8 @@ bentcable.ar<-function(y.vect,tgdev=NULL,p=0,stick=FALSE,t.vect=NULL,
 
 				initfit<-try(cable.ar.0.fit(y.vect,t.vect,tgdev$tau,tgdev$gamma,tgdev$dev))
 
-				if(length(initfit$fit)!=6){
+            #if(length(initfit$fit)!=6){
+            if(inherits(initfit$fit,"try-error")){
 
 					message("*****************************************************")
 					message("AR(0) fit failed (deviance surface too irregular).")
@@ -640,7 +646,8 @@ bentcable.ar<-function(y.vect,tgdev=NULL,p=0,stick=FALSE,t.vect=NULL,
 
 				initfit<-try(cable.fit.known.change(y.vect,t.vect,n,tgdev$tau,tgdev$gamma,tgdev$dev,p))
 
-				if(length(initfit$fit)!=13){
+				#if(length(initfit$fit)!=13){
+            if(inherits(initfit$fit,"try-error")){
 
 					message("*************************")
 					message(paste("AR(",p,") fit failed.",sep=""))
@@ -734,8 +741,9 @@ bentcable.ar<-function(y.vect,tgdev=NULL,p=0,stick=FALSE,t.vect=NULL,
 			message("*******************************")
 
 			initfit<-try(cable.ar.0.fit(y.vect,t.vect,tgdev$tau,tgdev$gamma,tgdev$dev,TRUE))
-
-			if(length(initfit$fit)!=6){
+         
+         #if(length(initfit$fit)!=6){
+			if(inherits(initfit$fit,"try-error")){
 
 				message("*****************************************************")
 				message("AR(0) fit failed (deviance too irregular).")
@@ -764,8 +772,9 @@ bentcable.ar<-function(y.vect,tgdev=NULL,p=0,stick=FALSE,t.vect=NULL,
 		}
 
 		initfit<-try(cable.fit.known.change(y.vect,t.vect,n,tgdev$tau,tgdev$gamma,tgdev$dev,p))
-
-		if(length(initfit$fit)!=13){
+      
+      #if(length(initfit$fit)!=13){
+		if(inherits(initfit$fit,"try-error")){
 
 			message("*************************")
 			message(paste("AR(",p,") fit failed.",sep=""))
@@ -998,25 +1007,28 @@ cable.ar.p.iter<-function(init,y.vect,t.vect=NULL,n=NA,
 		fit0<-try(nls(formula=y.vect~fullcable.t(t.vect,b0,b1,b2,tau,gamm),trace=TRUE,
 			start=list(b0=init[1],b1=init[2],b2=init[3],tau=init[4],gamm=init[5])))
 
-		if(length(fit0)!=6){
+      #if(length(fit0)!=6){
+		if(inherits(fit0,"try-error")){
 
 			message("Trying 'nls()' Golub-Pereyra algorithm...")
 
 			fit0<-try(nls(formula=y.vect~fullcable.t(t.vect,b0,b1,b2,tau,gamm),trace=TRUE,
-				alg="plinear",
+				algorithm="plinear",
 				start=list(b0=init[1],b1=init[2],b2=init[3],tau=init[4],
 				gamm=init[5])))
 
-			if(length(fit0)!=6){
+         #if(length(fit0)!=6){
+			if(inherits(fit0,"try-error")){
 
 				message("Trying 'nls()' Port algorithm...")
 
 				fit0<-try(nls(formula=y.vect~fullcable.t(t.vect,b0,b1,b2,tau,gamm),trace=TRUE,
-					alg="port",
+					algorithm="port",
 					start=list(b0=init[1],b1=init[2],b2=init[3],tau=init[4],
 					gamm=init[5])))
 
-				if(length(fit0)!=6){
+            #if(length(fit0)!=6){
+            if(inherits(fit0,"try-error")){
 					stop("Initial fit unsuccessful. Please try alternative initial values.")
 					return()
 				}
@@ -1137,7 +1149,7 @@ cable.Sig.ar.p<-function(w.vect,p,n=NA,method="yw"){
 	if(is.na(n))
 		n<-length(w.vect)
 
-	ar.p.fit<-ar(w.vect,aic=FALSE,order=p,demean=TRUE,method=method)
+	ar.p.fit<-ar(w.vect,aic=FALSE,order.max=p,demean=TRUE,method=method)
 		# demean in case w.vect is from a fit that doesn't go through data
 
 	#--------------------------------------------------------------
@@ -1151,7 +1163,7 @@ cable.Sig.ar.p<-function(w.vect,p,n=NA,method="yw"){
 
 		yw={
 
-			autocor.vect<-acf(w.vect,plot=FALSE,lag=p,demean=TRUE)$acf
+			autocor.vect<-acf(w.vect,plot=FALSE,lag.max=p,demean=TRUE)$acf
 		},
 
 		mle={
@@ -1262,25 +1274,28 @@ stick.ar.0<-function(init.vect,y.vect,t.vect=NULL,n=NA){
 		start=list(b0=init.vect[1],b1=init.vect[2],b2=init.vect[3],
 		tau=init.vect[4]),trace=TRUE))
 	
-	if(length(fit)!=6){
+   #if(length(fit)!=6){
+   if(inherits(fit,"try-error")){
 
 		message("Trying 'nls()' Golub-Pereyra algorithm...")
 
 		fit<-try(nls(formula=y.vect~fullcable.t(t.vect,b0,b1,b2,tau,0),
-			alg="plinear",
+			algorithm="plinear",
 			start=list(b0=init.vect[1],b1=init.vect[2],b2=init.vect[3],
 			tau=init.vect[4]),trace=TRUE))
 
-		if(length(fit)!=6){
+      #if(length(fit)!=6){
+		if(inherits(fit,"try-error")){
 
 			message("Trying 'nls()' Port algorithm...")
 
 			fit<-try(nls(formula=y.vect~fullcable.t(t.vect,b0,b1,b2,tau,0),
-				alg="port",
+				algorithm="port",
 				start=list(b0=init.vect[1],b1=init.vect[2],b2=init.vect[3],
 				tau=init.vect[4]),trace=TRUE))
 
-			if(length(fit)!=6){
+         #if(length(fit)!=6){
+			if(inherits(fit,"try-error")){
 				stop("Initial fit unsuccessful. Please try alternative initial values.")
 				return()
 			}

@@ -279,12 +279,12 @@ bentcable.dev.plot(tau.vect, gamma.vect = NULL, y.vect, t.vect = NULL,
 \references{  
 Chiu, G.S. and Lockhart, R.A. (2010), Bent-Cable Regression with
 	Autoregressive Noise, \emph{Canadian Journal of Statistics},
-	\bold{38}, 386--407.
+	\bold{38}, 386--407. DOI: 10.1002/cjs.10070  
 	\url{http://faculty.washington.edu/gchiu/Articles/bentcable-cjs.pdf}
 
 Chiu, G., Lockhart, R. and Routledge, R. (2006), Bent-Cable Regression
 	Theory and Applications, \emph{Journal of the American Statistical
-	Association}, \bold{101}, 542--553.
+	Association}, \bold{101}, 542--553. DOI: 10.1198/016214505000001177  
 	\url{http://faculty.washington.edu/gchiu/Articles/bentcable-jasa.pdf}
 }
 \author{ Grace Chiu }
@@ -330,13 +330,16 @@ Chiu, G., Lockhart, R. and Routledge, R. (2006), Bent-Cable Regression
 	\code{\link{ar}}, \code{\link{arima}}, \code{\link{plot}},
 	\code{\link{par}}, \code{\link{contour}}, \code{\link{persp}} }
 \examples{
-data(stagnant)
-data(sockeye)
+
+\dontrun{
 
 # Scenario (1)
 ##############
 
 # independent non-time-series cable:
+
+data(stagnant)
+
 bentcable.dev.plot( seq(-1,1,length=20),
 	seq(.1,1,length=20), stagnant$loght, stagnant$logflow )
 
@@ -385,11 +388,15 @@ bentcable.dev.plot( seq(1,20,length=25),
 		# feed 'cable0' in Scenario (3) to get fitted plot:
 		#	bentcable.ar( cable0$y, init.cable=coef(cable0$fit) )
 
+}
+
 
 
 
 # Scenario (2)
 ##############
+
+data(sockeye)
 
 # AR(2) cable, start time at 0:
 bentcable.dev.plot( seq(6,18,length=15),
@@ -419,6 +426,10 @@ bentcable.dev.plot( seq(86,98,length=15), y.vect=sockeye$logReturns,
 		t.vect=sockeye$year )
 			# irregularity - expect some trouble if used in Scenario (4)
 
+
+
+\dontrun{
+
 # AR(4) cable, start time at 0:
 bentcable.dev.plot( seq(6,18,length=15), seq(.01,12,length=15), 
 	sockeye$logReturns, p=4 )
@@ -435,10 +446,14 @@ bentcable.dev.plot( seq(6,18,length=15), seq(.01,12,length=15),
 
 
 
+
 # Scenario (3)
 ##############
 
 # independent non-time-series cable:
+
+data(stagnant)
+
 bentcable.ar( stagnant$loght, t.vect=stagnant$logflow,
 	init.cable=c(.6,-.4,-.7,0,.5) )   # SSE=0.005
 		# identical to 'cable' in Scenario (1)
@@ -458,6 +473,11 @@ bentcable.ar( sockeye$logReturns, init.cable=coef(cable0$fit)[1:5],
 	stick=TRUE )
 		# identical to 'cable0' in Scenario (1)
 		# here you get plot of fit and CTP confidence interval
+
+}
+
+
+
 
 # Scenario (4)
 ##############
@@ -488,6 +508,7 @@ stick2 <- bentcable.ar( sockeye$logReturns, init.cable=gr.stick2$init[1:4],
 						# "css" successful, SSE=5.1, not best fit!
 
 
+\dontrun{
 
 # AR(4) cable, start time at 0:
 cable4 <- bentcable.ar( sockeye$logReturns,
@@ -498,6 +519,7 @@ cable4 <- bentcable.ar( sockeye$logReturns,
 		bentcable.ar( cable4$cable$y, init.cable=cable4$cable$est[1:5],
 			init.phi=cable4$cable$est[-c(1:5)] )
 				# SSE=2.47 from screen output
+}
 }
 \keyword{ dplot }
 \keyword{ ts }

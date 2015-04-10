@@ -19,7 +19,7 @@ Regression}, Hoboken: Wiley. }
 \references{
 Chiu, G., Lockhart, R. and Routledge, R. (2006), Bent-Cable Regression
 	Theory and Applications, \emph{Journal of the American Statistical
-	Association}, \bold{101}, 542--553.
+	Association}, \bold{101}, 542--553. DOI: 10.1198/016214505000001177  
 	\url{http://faculty.washington.edu/gchiu/Articles/bentcable-jasa.pdf}
 }
 \keyword{datasets}
