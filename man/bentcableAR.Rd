@@ -12,8 +12,8 @@
 \tabular{ll}{
 Package: \tab bentcableAR\cr
 Type: \tab Package\cr
-Version: \tab 0.3.0\cr
-Date: \tab 2015-04-10\cr
+Version: \tab 0.3.1\cr
+Date: \tab 2022-05-25\cr
 License: \tab GPL (>=3)\cr
 }
 There are two main interfaces in this package:
@@ -53,12 +53,12 @@ Maintainer: Grace Chiu <bentcable@gmail.com>
 \references{
 Chiu, G.S. and Lockhart, R.A. (2010), Bent-Cable Regression with
    Autoregressive Noise, \emph{Canadian Journal of Statistics},
-   \bold{38}, 386--407. DOI: 10.1002/cjs.10070  
-	\url{http://faculty.washington.edu/gchiu/Articles/bentcable-cjs.pdf}
+   \bold{38}, 386--407. DOI: 10.1002/cjs.10070. URL:  
+	\url{https://www.researchgate.net/publication/227652258_Bent-cable_regression_with_autoregressive_noise}
 
 Chiu, G., Lockhart, R. and Routledge, R. (2006), Bent-Cable Regression
 	Theory and Applications, \emph{Journal of the American Statistical
-	Association}, \bold{101}, 542--553. DOI: 10.1198/016214505000001177  
-	\url{http://faculty.washington.edu/gchiu/Articles/bentcable-jasa.pdf}
+	Association}, \bold{101}, 542--553. DOI: 10.1198/016214505000001177. URL:  
+	\url{https://www.researchgate.net/publication/4742466_Bent-Cable_Regression_Theory_and_Applications}
 }
 \keyword{ package }

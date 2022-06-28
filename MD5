@@ -1,11 +1,11 @@
-795102bb8128a2aa92f1f5f69c7193e1 *DESCRIPTION
-9fdfeb11f7ddba6f3aab9aaa6b1ac5dd *NAMESPACE
+62914e316f92feecdb1379490034ba43 *DESCRIPTION
+1fece440cb2f1ce31ee5516f8a9907f7 *NAMESPACE
 a0181ebc4b429cc8e57c0f0d0b6ab0c0 *R/code.r
 00e045f36ce7e70c2d2da9dd1ab8f594 *data/sockeye.rda
 e9dec29f93023c28d8f7728849461553 *data/stagnant.rda
-fa38d39f99c5203df29af08293222ece *man/bentcable.ar.Rd
+edbbd9859d3c8fef2e9e6ebef8a56d24 *man/bentcable.ar.Rd
 cf2873955dd38f7fe4c9debe20e8dc47 *man/bentcableAR-internal.Rd
-0ac9f94bd898b581b6e57bf5d2bd4fe4 *man/bentcableAR.Rd
+703f6762bee6ae2fd843c51dbd1f00f5 *man/bentcableAR.Rd
 868fd1766d5b6d04425e49de797deef7 *man/cable.ar.p.diag.Rd
 28111f47dfd3da08381639442bfb94f8 *man/cable.ar.p.iter.Rd
 c973ecf59b4326e28332de04ea3dd5dd *man/cable.ar.p.plot.Rd
@@ -15,6 +15,6 @@ c973ecf59b4326e28332de04ea3dd5dd *man/cable.ar.p.plot.Rd
 3b4332440051a1eb0e51a8277e761dca *man/cable.lines.Rd
 4bd54a9a5a0f873607bf56a3d55c7f7b *man/fullcable.t.Rd
 fe13da2a9e6dceee5bdfd05244faf017 *man/is.stationary.Rd
-2f09cc88924219d017edaeed83dda85d *man/sockeye.Rd
-f31e3a9440f7734f6f61fbc48a8f7b20 *man/stagnant.Rd
+c9255832b6a7e6961c51257ee7e83d28 *man/sockeye.Rd
+9335ac8fbfc83b93636b5063c68be490 *man/stagnant.Rd
 0ed629f4bf3cc30b115831b0bb182f63 *man/stick.ar.0.Rd

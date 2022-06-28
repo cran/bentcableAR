@@ -1,5 +1,7 @@
-# Default NAMESPACE created by R
-# Remove the previous line if you edit this file
+importFrom("graphics", "abline", "contour", "lines", "par", "segments",
+             "text", "title")
+importFrom("stats", "acf", "ar", "arima", "arima.sim", "coef", "lm",
+             "na.omit", "nls", "optim", "pacf", "qnorm", "resid")
 
 # Export all names
 exportPattern(".")
